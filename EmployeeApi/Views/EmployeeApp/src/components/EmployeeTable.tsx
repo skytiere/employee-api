@@ -75,10 +75,29 @@ function EmployeeTable({ onSelectionChange }: EmployeeTableProps) {
   ];
 
   const handleSelectionChange = (newSelection: GridRowSelectionModel) => {
-    const selectedIds = Array.from(newSelection.ids).map(String);
-    const selectedEmployees = employees.filter((employee) =>
-      selectedIds.includes(employee.id),
-    );
+    let selectedEmployees: Employee[];
+
+    // Handle select-all
+    if (
+      typeof newSelection === "object" &&
+      newSelection !== null &&
+      "type" in newSelection &&
+      newSelection.type === "exclude"
+    ) {
+      const excludedIds = Array.from(
+        (newSelection.ids as Set<string>) || new Set(),
+      );
+      selectedEmployees = employees.filter(
+        (emp) => !excludedIds.includes(emp.id),
+      );
+    } else {
+      // Handle normal selection
+      const selectedIds = Array.from(newSelection.ids).map(String);
+      selectedEmployees = employees.filter((employee) =>
+        selectedIds.includes(employee.id),
+      );
+    }
+
     onSelectionChange?.(selectedEmployees);
   };
 
