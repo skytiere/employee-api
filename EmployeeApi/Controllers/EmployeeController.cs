@@ -114,7 +114,7 @@ public class EmployeeController : ControllerBase
 
         try
         {
-            _employeeService.Delete(id);
+            await _employeeService.Delete(id);
             return NoContent();
         }
         catch (Exception ex)
