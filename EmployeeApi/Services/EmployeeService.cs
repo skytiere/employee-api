@@ -56,8 +56,15 @@ public class EmployeeService : IEmployeeService
     public async Task<EmployeeDto> Create(CreateEmployeeDto createEmployeeDto)
     {
         var randomNumber = new Random().Next(0, 100000).ToString("D5");
+
         var namePart = createEmployeeDto.LastName.Substring(0, Math.Min(3, createEmployeeDto.LastName.Length)).ToUpper().Trim();
+        if (namePart.Length < 3)
+        {
+            namePart = namePart.PadRight(3, '*');
+        }
+
         var dobPart = createEmployeeDto.DateOfBirth.ToString("ddMMMyyyy").ToUpper();
+
         var employeeId = $"{namePart}-{randomNumber}-{dobPart}";
 
         Employee? employee = new Employee
