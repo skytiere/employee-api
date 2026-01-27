@@ -7,6 +7,7 @@ import { useState } from "react";
 import EmployeeTable from "./components/EmployeeTable";
 import AddEmployee from "./components/AddEmployee";
 import DeleteEmployee from "./components/DeleteEmployee";
+import UpdateEmployee from "./components/UpdateEmployee";
 import { Button, Stack } from "@mui/material";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -16,6 +17,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedEmployees, setSelectedEmployees] = useState<any[]>([]);
 
@@ -25,6 +27,10 @@ function App() {
 
   const handleDeleteClick = () => {
     setDeleteModalOpen(true);
+  };
+
+  const handleUpdateClick = () => {
+    setUpdateModalOpen(true);
   };
 
   const handleEmployeeChange = () => {
@@ -67,7 +73,11 @@ function App() {
           endIcon={<PersonAddAlt1RoundedIcon />}>
           Add
         </Button>
-        <Button variant="outlined" endIcon={<EditRoundedIcon />}>
+        <Button
+          variant="outlined"
+          onClick={handleUpdateClick}
+          disabled={selectedEmployees.length === 0}
+          endIcon={<EditRoundedIcon />}>
           Update
         </Button>
         <Button variant="outlined" endIcon={<AttachMoneyRoundedIcon />}>
@@ -96,6 +106,14 @@ function App() {
         onClose={() => setDeleteModalOpen(false)}
         selectedEmployees={selectedEmployees}
         onConfirmDelete={handleConfirmDelete}
+      />
+      <UpdateEmployee
+        isOpen={updateModalOpen}
+        onClose={() => setUpdateModalOpen(false)}
+        selectedEmployee={
+          selectedEmployees.length > 0 ? selectedEmployees[0] : null
+        }
+        onEmployeeUpdated={handleEmployeeChange}
       />
     </div>
   );

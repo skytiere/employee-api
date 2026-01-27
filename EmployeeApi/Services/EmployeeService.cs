@@ -28,7 +28,9 @@ public class EmployeeService : IEmployeeService
             DailyRate = employee.DailyRate,
             WorkingDays = employee.WorkingDays,
             CreatedAt = employee.CreatedAt,
-            UpdatedAt = employee.UpdatedAt
+            UpdatedAt = employee.UpdatedAt,
+            StartDate = employee.StartDate,
+            EndDate = employee.EndDate
         };
 
     public async Task<List<EmployeeDto>> GetAll()
@@ -67,6 +69,7 @@ public class EmployeeService : IEmployeeService
             DateOfBirth = createEmployeeDto.DateOfBirth,
             DailyRate = createEmployeeDto.DailyRate,
             WorkingDays = createEmployeeDto.WorkingDays,
+            StartDate = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -94,6 +97,7 @@ public class EmployeeService : IEmployeeService
         employee.DailyRate = updateEmployeeDto.DailyRate;
         employee.WorkingDays = updateEmployeeDto.WorkingDays;
         employee.UpdatedAt = DateTime.UtcNow;
+        employee.EndDate = updateEmployeeDto.EndDate;
 
         _context.Employees.Update(employee);
         await _context.SaveChangesAsync();

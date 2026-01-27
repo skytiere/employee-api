@@ -12,6 +12,8 @@ interface Employee {
   dateOfBirth: string;
   dailyRate: number;
   workingDays: string;
+  startDate: string;
+  endDate?: string;
   createdAt: string;
   updatedAt: string;
 }

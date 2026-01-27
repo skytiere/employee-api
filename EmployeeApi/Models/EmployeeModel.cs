@@ -11,6 +11,8 @@ public class Employee
     public required string WorkingDays { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
 }
 
 public class EmployeeDto
@@ -24,6 +26,8 @@ public class EmployeeDto
     public required string WorkingDays { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
 }
 
 public class CreateEmployeeDto
@@ -44,4 +48,5 @@ public class UpdateEmployeeDto
     public DateTime DateOfBirth { get; set; }
     public decimal DailyRate { get; set; }
     public required string WorkingDays { get; set; }
+    public DateTime? EndDate { get; set; }
 }
