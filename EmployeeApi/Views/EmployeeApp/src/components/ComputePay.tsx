@@ -49,7 +49,6 @@ const ComputePay: React.FC<ComputePayProps> = ({
     currentDate.format("YYYY-MM"),
   );
 
-  // Clamp the initially selected month within the employee's active range
   useEffect(() => {
     if (!selectedEmployee) return;
     const start = dayjs(selectedEmployee.startDate).startOf("month");
@@ -96,7 +95,7 @@ const ComputePay: React.FC<ComputePayProps> = ({
 
     const workingDaysStr = selectedEmployee.workingDays;
 
-    // Map working days to day numbers (0 = Sunday, 1 = Monday, etc.)
+    // Map working days to day numbers
     const workingDayMap: { [key: string]: number[] } = {
       MWF: [1, 3, 5], // Monday, Wednesday, Friday
       TTHS: [2, 4, 6], // Tuesday, Thursday, Saturday
@@ -116,10 +115,10 @@ const ComputePay: React.FC<ComputePayProps> = ({
       cursor = cursor.add(1, "day");
     }
 
-    // Calculate pay from working days (3 days/week = 2x daily rate)
+    // Compute pay from working days (3 days/week = 2x daily rate)
     const workingDaysPay = workingDaysInMonth * selectedEmployee.dailyRate * 2;
 
-    // Check if birthday occurs in this month AND within active range
+    // Check for birthdays
     const birthDate = dayjs(selectedEmployee.dateOfBirth);
     const birthdayThisMonth = birthDate.month() === monthDate.month();
     let birthdayBonus = 0;

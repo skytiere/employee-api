@@ -26,7 +26,7 @@ function EmployeeTable({ onSelectionChange }: EmployeeTableProps) {
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState<Employee[]>([]);
 
-  // Fetch data when component loads
+  // Fetch data on component load
   useEffect(() => {
     fetchEmployees();
   }, []);
