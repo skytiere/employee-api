@@ -21,7 +21,9 @@ public class EmployeeService : IEmployeeService
         new EmployeeDto
         {
             Id = employee.Id,
-            Name = employee.Name,
+            LastName = employee.LastName,
+            FirstName = employee.FirstName,
+            MiddleName = employee.MiddleName,
             DateOfBirth = employee.DateOfBirth,
             DailyRate = employee.DailyRate,
             WorkingDays = employee.WorkingDays,
@@ -58,14 +60,16 @@ public class EmployeeService : IEmployeeService
     public async Task<EmployeeDto> Create(CreateEmployeeDto createEmployeeDto)
     {
         var randomNumber = new Random().Next(0, 100000).ToString("D5");
-        var namePart = createEmployeeDto.Name.Substring(0, Math.Min(3, createEmployeeDto.Name.Length)).ToUpper();
+        var namePart = createEmployeeDto.LastName.Substring(0, Math.Min(3, createEmployeeDto.LastName.Length)).ToUpper();
         var dobPart = createEmployeeDto.DateOfBirth.ToString("ddMMMyyyy");
         var employeeId = $"{namePart}{randomNumber}{dobPart}";
 
         Employee? employee = new Employee
         {
             Id = employeeId,
-            Name = createEmployeeDto.Name,
+            LastName = createEmployeeDto.LastName,
+            FirstName = createEmployeeDto.FirstName,
+            MiddleName = createEmployeeDto.MiddleName,
             DateOfBirth = createEmployeeDto.DateOfBirth,
             DailyRate = createEmployeeDto.DailyRate,
             WorkingDays = createEmployeeDto.WorkingDays,
@@ -89,7 +93,9 @@ public class EmployeeService : IEmployeeService
             throw new KeyNotFoundException($"Employee with ID: {id} not found.");
         }
 
-        employee.Name = updateEmployeeDto.Name;
+        employee.LastName = updateEmployeeDto.LastName;
+        employee.FirstName = updateEmployeeDto.FirstName;
+        employee.MiddleName = updateEmployeeDto.MiddleName;
         employee.DateOfBirth = updateEmployeeDto.DateOfBirth;
         employee.DailyRate = updateEmployeeDto.DailyRate;
         employee.WorkingDays = updateEmployeeDto.WorkingDays;
