@@ -35,12 +35,6 @@ public class EmployeeService : IEmployeeService
     {
         var employees = await _context.Employees.ToListAsync();
 
-        if (!employees.Any())
-        {
-            _logger.LogWarning("No employees found.");
-            throw new KeyNotFoundException("No employees found.");
-        }
-
         return employees.Select(e => MapToDto(e)).ToList();
     }
 
