@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using EmployeeApi.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EmployeeApi.Data;
 
@@ -33,19 +34,37 @@ public class EmployeeContext : DbContext
                 DailyRate = 2000.00m,
                 WorkingDays = "MWF",
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                StartDate = new DateTime(2025, 5, 16),
+                EndDate = new DateTime(2025, 5, 20)
             },
             new Employee
             {
-                Id = "JOH-54321-15AUG1985",
-                LastName = "JOHNSON",
-                FirstName = "ROBERT",
-                MiddleName = "MICHAEL",
-                DateOfBirth = new DateTime(1985, 8, 15),
-                DailyRate = 2500.00m,
+                Id = "SY*-00779-10SEP1994",
+                LastName = "SY",
+                FirstName = "ANNIE",
+                MiddleName = "",
+                DateOfBirth = new DateTime(1994, 9, 1),
+                DailyRate = 1500.00m,
                 WorkingDays = "TTHS",
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                StartDate = new DateTime(2025, 9, 1),
+                EndDate = new DateTime(2025, 9, 9)
+            },
+            new Employee
+            {
+                Id = "RAM-54321-23DEC1990",
+                LastName = "RAMOS",
+                FirstName = "CARLOS",
+                MiddleName = "LOPEZ",
+                DateOfBirth = new DateTime(1990, 12, 23),
+                DailyRate = 1800.00m,
+                WorkingDays = "MWF",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                StartDate = new DateTime(2025, 12, 1),
+                EndDate = null
             }
         );
     }

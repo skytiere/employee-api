@@ -8,6 +8,7 @@ import EmployeeTable from "./components/EmployeeTable";
 import AddEmployee from "./components/AddEmployee";
 import DeleteEmployee from "./components/DeleteEmployee";
 import UpdateEmployee from "./components/UpdateEmployee";
+import ComputePay from "./components/ComputePay";
 import { Button, Stack } from "@mui/material";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -18,6 +19,7 @@ function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [computeModalOpen, setComputeModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedEmployees, setSelectedEmployees] = useState<any[]>([]);
 
@@ -31,6 +33,10 @@ function App() {
 
   const handleUpdateClick = () => {
     setUpdateModalOpen(true);
+  };
+
+  const handleComputeClick = () => {
+    setComputeModalOpen(true);
   };
 
   const handleEmployeeChange = () => {
@@ -80,7 +86,11 @@ function App() {
           endIcon={<EditRoundedIcon />}>
           Update
         </Button>
-        <Button variant="outlined" endIcon={<AttachMoneyRoundedIcon />}>
+        <Button
+          variant="outlined"
+          onClick={handleComputeClick}
+          disabled={selectedEmployees.length === 0}
+          endIcon={<AttachMoneyRoundedIcon />}>
           Compute
         </Button>
         <Button
@@ -114,6 +124,13 @@ function App() {
           selectedEmployees.length > 0 ? selectedEmployees[0] : null
         }
         onEmployeeUpdated={handleEmployeeChange}
+      />
+      <ComputePay
+        isOpen={computeModalOpen}
+        onClose={() => setComputeModalOpen(false)}
+        selectedEmployee={
+          selectedEmployees.length > 0 ? selectedEmployees[0] : null
+        }
       />
     </div>
   );

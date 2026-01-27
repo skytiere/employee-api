@@ -69,9 +69,10 @@ public class EmployeeService : IEmployeeService
             DateOfBirth = createEmployeeDto.DateOfBirth,
             DailyRate = createEmployeeDto.DailyRate,
             WorkingDays = createEmployeeDto.WorkingDays,
-            StartDate = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
+            StartDate = DateTime.UtcNow,
+            EndDate = null
         };
 
         _context.Employees.Add(employee);
