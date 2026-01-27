@@ -5,7 +5,7 @@ using EmployeeApi.Interface;
 namespace EmployeeApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/employee")]
 
 public class EmployeeController : ControllerBase
 {
