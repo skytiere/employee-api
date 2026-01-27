@@ -1,31 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using EmployeeApi.Models;
 using EmployeeApi.Data;
+using EmployeeApi.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeApi.Services;
 
-public class EmployeeService : Interface.IEmployeeService
+public class EmployeeService : IEmployeeService
 {
-    private readonly ILogger<EmployeeService> _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<EmployeeService>();
+
+    private readonly ILogger<EmployeeService> _logger;
     private readonly EmployeeContext _context;
 
-    public EmployeeService(EmployeeContext context)
+    public EmployeeService(ILogger<EmployeeService> logger, EmployeeContext context)
     {
+        _logger = logger;
         _context = context;
     }
 
-    public List<EmployeeDto> GetAll()
+    public async Task<List<EmployeeDto>> GetAll()
     {
-        var employees = new List<EmployeeDto>();
-        try
-        {
-            employees = _context.Employees.ToList();
-        }
-        catch (Exception)
-        {
-            _logger.LogError("An error occurred while retrieving employees from the database.");
-            return new List<EmployeeDto>();
-        }
+        var employees = await _context.Employees.ToListAsync();
 
         if (employees == null || employees.Count == 0)
         {
@@ -45,24 +40,15 @@ public class EmployeeService : Interface.IEmployeeService
         }).ToList();
     }
 
-    public EmployeeDto GetById(string id)
+    public async Task<EmployeeDto> GetById(string id)
     {
-        Employee? employee;
-        try
+        Employee? employee = await _context.Employees.FindAsync(id);
+
+        if (employee == null)
         {
-            employee = _context.Employees.Find(id);
-            if (employee == null)
-            {
-                _logger.LogWarning($"Employee with ID: {id} not found.");
-                return null!;
-            }
-        }
-        catch (Exception)
-        {
-            _logger.LogError($"An error occurred while retrieving employee with ID: {id} from the database.");
+            _logger.LogWarning($"Employee with ID: {id} not found.");
             return null!;
         }
-
 
         return new EmployeeDto
         {
@@ -76,31 +62,28 @@ public class EmployeeService : Interface.IEmployeeService
         };
     }
 
-    public EmployeeDto Create(CreateEmployeeDto createEmployeeDto)
+    public async Task<EmployeeDto> Create(CreateEmployeeDto createEmployeeDto)
     {
-        Employee? employee;
-        try
+        var randomNumber = new Random().Next(0, 100000).ToString("D5");
+        var namePart = createEmployeeDto.Name.Substring(0, Math.Min(3, createEmployeeDto.Name.Length)).ToUpper();
+        var dobPart = createEmployeeDto.DateOfBirth.ToString("ddMMMyyyy");
+        var employeeId = $"{namePart}{randomNumber}{dobPart}";
+
+        Employee? employee = new Employee
         {
-            var randomNumber = new Random().Next(0, 100000).ToString("D5");
-            var namePart = createEmployeeDto.Name.Substring(0, Math.Min(3, createEmployeeDto.Name.Length)).ToUpper();
-            var dobPart = createEmployeeDto.DateOfBirth.ToString("ddMMMyyyy");
-            var employeeId = $"{namePart}{randomNumber}{dobPart}";
+            Id = employeeId,
+            Name = createEmployeeDto.Name,
+            DateOfBirth = createEmployeeDto.DateOfBirth,
+            DailyRate = createEmployeeDto.DailyRate,
+            WorkingDays = createEmployeeDto.WorkingDays,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
 
-            employee = new Employee
-            {
-                Id = employeeId,
-                Name = createEmployeeDto.Name,
-                DateOfBirth = createEmployeeDto.DateOfBirth,
-                DailyRate = createEmployeeDto.DailyRate,
-                WorkingDays = createEmployeeDto.WorkingDays,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+        _context.Employees.Add(employee);
+        _context.SaveChanges();
 
-            _context.Employees.Add(employee);
-            _context.SaveChanges();
-        }
-        catch (Exception)
+        if (employee == null)
         {
             _logger.LogError("An error occurred while creating a new employee in the database.");
             return null!;
@@ -118,62 +101,53 @@ public class EmployeeService : Interface.IEmployeeService
         };
     }
 
-    public EmployeeDto Update(string id, UpdateEmployeeDto updateEmployeeDto)
+    public async Task<EmployeeDto> Update(string id, UpdateEmployeeDto updateEmployeeDto)
     {
-        try
+        var employee = _context.Employees.Find(id);
+        if (employee == null)
         {
-            var employee = _context.Employees.Find(id);
-            if (employee == null)
-            {
-                _logger.LogWarning($"Employee with ID: {id} not found.");
-                return null!;
-            }
-
-            employee.Name = updateEmployeeDto.Name;
-            employee.DateOfBirth = updateEmployeeDto.DateOfBirth;
-            employee.DailyRate = updateEmployeeDto.DailyRate;
-            employee.WorkingDays = updateEmployeeDto.WorkingDays;
-            employee.UpdatedAt = DateTime.UtcNow;
-
-            _context.Employees.Update(employee);
-            _context.SaveChanges();
-
-            return new EmployeeDto
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                DateOfBirth = employee.DateOfBirth,
-                DailyRate = employee.DailyRate,
-                WorkingDays = employee.WorkingDays,
-                CreatedAt = employee.CreatedAt,
-                UpdatedAt = employee.UpdatedAt
-            };
+            _logger.LogWarning($"Employee with ID: {id} not found.");
+            return null!;
         }
-        catch (Exception)
+
+        employee.Name = updateEmployeeDto.Name;
+        employee.DateOfBirth = updateEmployeeDto.DateOfBirth;
+        employee.DailyRate = updateEmployeeDto.DailyRate;
+        employee.WorkingDays = updateEmployeeDto.WorkingDays;
+        employee.UpdatedAt = DateTime.UtcNow;
+
+        _context.Employees.Update(employee);
+        _context.SaveChanges();
+
+        if (employee == null)
         {
             _logger.LogError($"An error occurred while updating employee with ID: {id} in the database.");
             return null!;
         }
+
+        return new EmployeeDto
+        {
+            Id = employee.Id,
+            Name = employee.Name,
+            DateOfBirth = employee.DateOfBirth,
+            DailyRate = employee.DailyRate,
+            WorkingDays = employee.WorkingDays,
+            CreatedAt = employee.CreatedAt,
+            UpdatedAt = employee.UpdatedAt
+        };
     }
 
-    public void Delete(string id)
+    public async Task Delete(string id)
     {
         var employee = _context.Employees.Find(id);
 
-        try
+        if (employee == null)
         {
-            if (employee == null)
-            {
-                _logger.LogWarning($"Employee with ID: {id} not found.");
-                return;
-            }
+            _logger.LogWarning($"Employee with ID: {id} not found.");
+            return;
+        }
 
-            _context.Employees.Remove(employee);
-            _context.SaveChanges();
-        }
-        catch (Exception)
-        {
-            _logger.LogError($"An error occurred while deleting employee with ID: {id} from the database.");
-        }
+        _context.Employees.Remove(employee);
+        _context.SaveChanges();
     }
 }

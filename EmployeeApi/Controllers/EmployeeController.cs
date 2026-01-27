@@ -27,7 +27,7 @@ public class EmployeeController : ControllerBase
 
         try
         {
-            var employees = _employeeService.GetAll();
+            var employees = await _employeeService.GetAll();
 
             if (employees == null || employees.Count == 0)
             {
@@ -51,7 +51,7 @@ public class EmployeeController : ControllerBase
 
         try
         {
-            var employee = _employeeService.GetById(id);
+            var employee = await _employeeService.GetById(id);
             if (employee == null)
             {
                 _logger.LogWarning($"Employee with ID: {id} not found.");
@@ -74,7 +74,7 @@ public class EmployeeController : ControllerBase
 
         try
         {
-            var createdEmployee = _employeeService.Create(createEmployeeDto);
+            var createdEmployee = await _employeeService.Create(createEmployeeDto);
             return CreatedAtAction(nameof(GetEmployeeById), new { id = createdEmployee.Id }, createdEmployee);
         }
         catch (Exception ex)
@@ -91,7 +91,7 @@ public class EmployeeController : ControllerBase
 
         try
         {
-            var updatedEmployee = _employeeService.Update(id, updateEmployeeDto);
+            var updatedEmployee = await _employeeService.Update(id, updateEmployeeDto);
             if (updatedEmployee == null)
             {
                 _logger.LogWarning($"Employee with ID: {id} not found.");
