@@ -1,6 +1,6 @@
 using EmployeeApi.Models;
-using EmployeeApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using EmployeeApi.Interface;
 
 namespace EmployeeApi.Controllers;
 
@@ -10,11 +10,11 @@ namespace EmployeeApi.Controllers;
 public class EmployeeController : ControllerBase
 {
     private readonly ILogger<EmployeeController> _logger;
-    private readonly EmployeeService _employeeService;
+    private readonly IEmployeeService _employeeService;
 
     public EmployeeController(
         ILogger<EmployeeController> logger,
-        EmployeeService employeeService)
+        IEmployeeService employeeService)
     {
         _logger = logger;
         _employeeService = employeeService;
@@ -29,13 +29,12 @@ public class EmployeeController : ControllerBase
         {
             var result = await _employeeService.GetAll();
 
-            if (result is null || result.Count == 0)
-            {
-                _logger.LogWarning("No employees found.");
-                return NotFound("No employees found.");
-            }
-
             return Ok(result);
+        }
+        catch (KeyNotFoundException notFoundEx)
+        {
+            _logger.LogWarning(notFoundEx.Message);
+            return NotFound(notFoundEx.Message);
         }
         catch (Exception ex)
         {
@@ -52,13 +51,13 @@ public class EmployeeController : ControllerBase
         try
         {
             var result = await _employeeService.GetById(id);
-            if (result is null)
-            {
-                _logger.LogWarning($"Employee with ID: {id} not found.");
-                return NotFound($"Employee with ID: {id} not found.");
-            }
 
             return Ok(result);
+        }
+        catch (KeyNotFoundException notFoundEx)
+        {
+            _logger.LogWarning(notFoundEx.Message);
+            return NotFound(notFoundEx.Message);
         }
         catch (Exception ex)
         {
@@ -92,13 +91,13 @@ public class EmployeeController : ControllerBase
         try
         {
             var result = await _employeeService.Update(id, updateEmployeeDto);
-            if (result is null)
-            {
-                _logger.LogWarning($"Employee with ID: {id} not found.");
-                return NotFound($"Employee with ID: {id} not found.");
-            }
 
             return Ok(result);
+        }
+        catch (KeyNotFoundException notFoundEx)
+        {
+            _logger.LogWarning(notFoundEx.Message);
+            return NotFound(notFoundEx.Message);
         }
         catch (Exception ex)
         {
@@ -116,6 +115,11 @@ public class EmployeeController : ControllerBase
         {
             await _employeeService.Delete(id);
             return NoContent();
+        }
+        catch (KeyNotFoundException notFoundEx)
+        {
+            _logger.LogWarning(notFoundEx.Message);
+            return NotFound(notFoundEx.Message);
         }
         catch (Exception ex)
         {
