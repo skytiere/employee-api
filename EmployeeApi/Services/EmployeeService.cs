@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using EmployeeApi.Models;
 using EmployeeApi.Data;
 using EmployeeApi.Interface;
@@ -18,39 +17,8 @@ public class EmployeeService : IEmployeeService
         _context = context;
     }
 
-    public async Task<List<EmployeeDto>> GetAll()
-    {
-        var employees = await _context.Employees.ToListAsync();
-
-        if (employees == null || employees.Count == 0)
-        {
-            _logger.LogWarning("No employees found in the database.");
-            return new List<EmployeeDto>();
-        }
-
-        return employees.Select(e => new EmployeeDto
-        {
-            Id = e.Id,
-            Name = e.Name,
-            DateOfBirth = e.DateOfBirth,
-            DailyRate = e.DailyRate,
-            WorkingDays = e.WorkingDays,
-            CreatedAt = e.CreatedAt,
-            UpdatedAt = e.UpdatedAt
-        }).ToList();
-    }
-
-    public async Task<EmployeeDto> GetById(string id)
-    {
-        Employee? employee = await _context.Employees.FindAsync(id);
-
-        if (employee == null)
-        {
-            _logger.LogWarning($"Employee with ID: {id} not found.");
-            return null!;
-        }
-
-        return new EmployeeDto
+    private static EmployeeDto MapToDto(Employee employee) =>
+        new EmployeeDto
         {
             Id = employee.Id,
             Name = employee.Name,
@@ -60,6 +28,31 @@ public class EmployeeService : IEmployeeService
             CreatedAt = employee.CreatedAt,
             UpdatedAt = employee.UpdatedAt
         };
+
+    public async Task<List<EmployeeDto>> GetAll()
+    {
+        var employees = await _context.Employees.ToListAsync();
+
+        if (!employees.Any())
+        {
+            _logger.LogWarning("No employees found.");
+            throw new KeyNotFoundException("No employees found.");
+        }
+
+        return employees.Select(e => MapToDto(e)).ToList();
+    }
+
+    public async Task<EmployeeDto> GetById(string id)
+    {
+        Employee? employee = await _context.Employees.FindAsync(id);
+
+        if (employee is null)
+        {
+            _logger.LogWarning($"Employee with ID: {id} not found.");
+            throw new KeyNotFoundException($"Employee with ID: {id} not found.");
+        }
+
+        return MapToDto(employee);
     }
 
     public async Task<EmployeeDto> Create(CreateEmployeeDto createEmployeeDto)
@@ -81,33 +74,19 @@ public class EmployeeService : IEmployeeService
         };
 
         _context.Employees.Add(employee);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        if (employee == null)
-        {
-            _logger.LogError("An error occurred while creating a new employee in the database.");
-            return null!;
-        }
-
-        return new EmployeeDto
-        {
-            Id = employee.Id,
-            Name = employee.Name,
-            DateOfBirth = employee.DateOfBirth,
-            DailyRate = employee.DailyRate,
-            WorkingDays = employee.WorkingDays,
-            CreatedAt = employee.CreatedAt,
-            UpdatedAt = employee.UpdatedAt
-        };
+        return MapToDto(employee);
     }
 
     public async Task<EmployeeDto> Update(string id, UpdateEmployeeDto updateEmployeeDto)
     {
-        var employee = _context.Employees.Find(id);
-        if (employee == null)
+        var employee = await _context.Employees.FindAsync(id);
+
+        if (employee is null)
         {
             _logger.LogWarning($"Employee with ID: {id} not found.");
-            return null!;
+            throw new KeyNotFoundException($"Employee with ID: {id} not found.");
         }
 
         employee.Name = updateEmployeeDto.Name;
@@ -117,37 +96,22 @@ public class EmployeeService : IEmployeeService
         employee.UpdatedAt = DateTime.UtcNow;
 
         _context.Employees.Update(employee);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        if (employee == null)
-        {
-            _logger.LogError($"An error occurred while updating employee with ID: {id} in the database.");
-            return null!;
-        }
-
-        return new EmployeeDto
-        {
-            Id = employee.Id,
-            Name = employee.Name,
-            DateOfBirth = employee.DateOfBirth,
-            DailyRate = employee.DailyRate,
-            WorkingDays = employee.WorkingDays,
-            CreatedAt = employee.CreatedAt,
-            UpdatedAt = employee.UpdatedAt
-        };
+        return MapToDto(employee);
     }
 
     public async Task Delete(string id)
     {
-        var employee = _context.Employees.Find(id);
+        Employee? employee = _context.Employees.Find(id);
 
-        if (employee == null)
+        if (employee is null)
         {
             _logger.LogWarning($"Employee with ID: {id} not found.");
-            return;
+            throw new KeyNotFoundException($"Employee with ID: {id} not found.");
         }
 
         _context.Employees.Remove(employee);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }
