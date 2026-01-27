@@ -43,17 +43,17 @@ function EmployeeTable() {
     {
       field: "id",
       headerName: "ID",
-      flex: 1,
+      flex: 2,
     },
     {
       field: "lastName",
       headerName: "Last Name",
-      flex: 1,
+      flex: 1.5,
     },
     {
       field: "firstName",
       headerName: "First Name",
-      flex: 1,
+      flex: 1.5,
     },
     {
       field: "dailyRate",
@@ -64,12 +64,12 @@ function EmployeeTable() {
     {
       field: "workingDays",
       headerName: "Working Days",
-      flex: 1,
+      flex: 1.5,
     },
   ];
 
   return (
-    <Paper style={{ height: 400, width: "100%" }}>
+    <Paper style={{ height: 400, width: "90vw" }}>
       <DataGrid
         rows={employees}
         columns={columns}
