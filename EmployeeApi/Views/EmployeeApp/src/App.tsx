@@ -1,5 +1,11 @@
 import "./App.css";
+
+// States
+import { useState } from "react";
+
+// Components
 import EmployeeTable from "./components/EmployeeTable";
+import AddEmployee from "./components/AddEmployee";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -8,6 +14,17 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
 
 function App() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleAddEmployeeClick = () => {
+    setModalOpen(true);
+  };
+
+  const handleEmployeeChange = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
   return (
     <div className="App">
       <h1>Employee Payroll System</h1>
@@ -20,7 +37,10 @@ function App() {
           justifyContent: "center",
           marginBottom: "1rem",
         }}>
-        <Button variant="outlined" endIcon={<PersonAddAlt1RoundedIcon />}>
+        <Button
+          variant="outlined"
+          onClick={handleAddEmployeeClick}
+          endIcon={<PersonAddAlt1RoundedIcon />}>
           Add Employee
         </Button>
         <Button variant="outlined" endIcon={<EditRoundedIcon />}>
@@ -33,7 +53,12 @@ function App() {
           Delete Employee
         </Button>
       </Stack>
-      <EmployeeTable />
+      <EmployeeTable key={refreshTrigger} />
+      <AddEmployee
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onEmployeeAdded={handleEmployeeChange}
+      />
     </div>
   );
 }
