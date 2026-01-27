@@ -6,22 +6,47 @@ import { useState } from "react";
 // Components
 import EmployeeTable from "./components/EmployeeTable";
 import AddEmployee from "./components/AddEmployee";
-import { Button, Stack } from "@mui/material/";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteEmployee from "./components/DeleteEmployee";
+import { Button, Stack } from "@mui/material";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [selectedEmployees, setSelectedEmployees] = useState<any[]>([]);
 
   const handleAddEmployeeClick = () => {
     setModalOpen(true);
   };
 
+  const handleDeleteClick = () => {
+    setDeleteModalOpen(true);
+  };
+
   const handleEmployeeChange = () => {
     setRefreshTrigger((prev) => prev + 1);
+    setSelectedEmployees([]);
+  };
+
+  const handleSelectionChange = (selected: any[]) => {
+    setSelectedEmployees(selected);
+  };
+
+  const handleConfirmDelete = async (ids: string[]) => {
+    try {
+      // Delete each employee
+      await Promise.all(
+        ids.map((id) => fetch(`/api/employee/${id}`, { method: "DELETE" })),
+      );
+      handleEmployeeChange();
+    } catch (error) {
+      console.error("Error deleting employees:", error);
+      alert("Failed to delete employees");
+    }
   };
 
   return (
@@ -48,15 +73,29 @@ function App() {
         <Button variant="outlined" endIcon={<AttachMoneyRoundedIcon />}>
           Compute
         </Button>
-        <Button variant="outlined" endIcon={<DeleteIcon />}>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={handleDeleteClick}
+          disabled={selectedEmployees.length === 0}
+          endIcon={<DeleteOutlineIcon />}>
           Delete
         </Button>
       </Stack>
-      <EmployeeTable key={refreshTrigger} />
+      <EmployeeTable
+        key={refreshTrigger}
+        onSelectionChange={handleSelectionChange}
+      />
       <AddEmployee
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onEmployeeAdded={handleEmployeeChange}
+      />
+      <DeleteEmployee
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        selectedEmployees={selectedEmployees}
+        onConfirmDelete={handleConfirmDelete}
       />
     </div>
   );

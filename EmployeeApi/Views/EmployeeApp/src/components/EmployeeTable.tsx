@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import type { GridRowSelectionModel } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
@@ -15,9 +16,12 @@ interface Employee {
   updatedAt: string;
 }
 
-function EmployeeTable() {
-  const [loading, setLoading] = useState(true);
+interface EmployeeTableProps {
+  onSelectionChange?: (selectedEmployees: Employee[]) => void;
+}
 
+function EmployeeTable({ onSelectionChange }: EmployeeTableProps) {
+  const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState<Employee[]>([]);
 
   // Fetch data when component loads
@@ -68,6 +72,14 @@ function EmployeeTable() {
     },
   ];
 
+  const handleSelectionChange = (newSelection: GridRowSelectionModel) => {
+    const selectedIds = Array.from(newSelection.ids).map(String);
+    const selectedEmployees = employees.filter((employee) =>
+      selectedIds.includes(employee.id),
+    );
+    onSelectionChange?.(selectedEmployees);
+  };
+
   return (
     <Paper style={{ height: 400, width: "100%" }}>
       <DataGrid
@@ -77,6 +89,7 @@ function EmployeeTable() {
         pageSizeOptions={[5]}
         checkboxSelection
         getRowId={(row) => row.id}
+        onRowSelectionModelChange={handleSelectionChange}
       />
     </Paper>
   );
