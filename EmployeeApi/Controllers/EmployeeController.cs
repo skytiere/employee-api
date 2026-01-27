@@ -27,15 +27,15 @@ public class EmployeeController : ControllerBase
 
         try
         {
-            var employees = await _employeeService.GetAll();
+            var result = await _employeeService.GetAll();
 
-            if (employees == null || employees.Count == 0)
+            if (result is null || result.Count == 0)
             {
                 _logger.LogWarning("No employees found.");
                 return NotFound("No employees found.");
             }
 
-            return Ok(employees);
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -51,14 +51,14 @@ public class EmployeeController : ControllerBase
 
         try
         {
-            var employee = await _employeeService.GetById(id);
-            if (employee == null)
+            var result = await _employeeService.GetById(id);
+            if (result is null)
             {
                 _logger.LogWarning($"Employee with ID: {id} not found.");
                 return NotFound($"Employee with ID: {id} not found.");
             }
 
-            return Ok(employee);
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -91,14 +91,14 @@ public class EmployeeController : ControllerBase
 
         try
         {
-            var updatedEmployee = await _employeeService.Update(id, updateEmployeeDto);
-            if (updatedEmployee == null)
+            var result = await _employeeService.Update(id, updateEmployeeDto);
+            if (result is null)
             {
                 _logger.LogWarning($"Employee with ID: {id} not found.");
                 return NotFound($"Employee with ID: {id} not found.");
             }
 
-            return Ok(updatedEmployee);
+            return Ok(result);
         }
         catch (Exception ex)
         {
