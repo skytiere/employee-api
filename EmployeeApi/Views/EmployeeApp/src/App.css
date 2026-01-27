@@ -22,6 +22,11 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.Mui-disabled {
+  border: 1px solid gray !important;
+  color: gray !important;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
