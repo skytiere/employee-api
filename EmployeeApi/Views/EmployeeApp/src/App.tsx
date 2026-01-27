@@ -6,8 +6,7 @@ import { useState } from "react";
 // Components
 import EmployeeTable from "./components/EmployeeTable";
 import AddEmployee from "./components/AddEmployee";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
+import { Button, Stack } from "@mui/material/";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -41,16 +40,16 @@ function App() {
           variant="outlined"
           onClick={handleAddEmployeeClick}
           endIcon={<PersonAddAlt1RoundedIcon />}>
-          Add Employee
+          Add
         </Button>
         <Button variant="outlined" endIcon={<EditRoundedIcon />}>
-          Update Employee
+          Update
         </Button>
         <Button variant="outlined" endIcon={<AttachMoneyRoundedIcon />}>
-          Compute Take Home
+          Compute
         </Button>
         <Button variant="outlined" endIcon={<DeleteIcon />}>
-          Delete Employee
+          Delete
         </Button>
       </Stack>
       <EmployeeTable key={refreshTrigger} />
