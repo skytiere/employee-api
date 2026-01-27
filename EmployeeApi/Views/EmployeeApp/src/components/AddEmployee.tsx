@@ -55,9 +55,9 @@ function AddEmployee({ isOpen, onClose, onEmployeeAdded }: AddEmployeeProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          lastName: formData.lastName,
-          firstName: formData.firstName,
-          middleName: formData.middleName || null,
+          lastName: formData.lastName.toUpperCase().trim(),
+          firstName: formData.firstName.toUpperCase().trim(),
+          middleName: formData.middleName.toUpperCase().trim() || null,
           dateOfBirth: dateOfBirth.toDate(),
           dailyRate: parseFloat(formData.dailyRate),
           workingDays: workingDays,
@@ -67,8 +67,8 @@ function AddEmployee({ isOpen, onClose, onEmployeeAdded }: AddEmployeeProps) {
       if (!response.ok) throw new Error("Failed to create employee");
 
       // Success - refresh table and close modal
-      onEmployeeAdded(); // Tells parent to refresh
-      onClose(); // Close modal
+      onEmployeeAdded();
+      onClose();
 
       // Reset form
       setDateOfBirth(null);
