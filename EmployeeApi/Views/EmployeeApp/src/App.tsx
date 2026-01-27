@@ -82,14 +82,18 @@ function App() {
         <Button
           variant="outlined"
           onClick={handleUpdateClick}
-          disabled={selectedEmployees.length === 0}
+          disabled={
+            selectedEmployees.length === 0 || selectedEmployees.length > 1
+          }
           endIcon={<EditRoundedIcon />}>
           Update
         </Button>
         <Button
           variant="outlined"
           onClick={handleComputeClick}
-          disabled={selectedEmployees.length === 0}
+          disabled={
+            selectedEmployees.length === 0 || selectedEmployees.length > 1
+          }
           endIcon={<AttachMoneyRoundedIcon />}>
           Compute
         </Button>
