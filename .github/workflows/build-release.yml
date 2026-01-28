@@ -1,0 +1,50 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Build React
+        run: |
+          cd EmployeeApi/Views/EmployeeApp
+          npm install
+          npm run build
+      
+      - name: Publish .NET
+        run: |
+          cd EmployeeApi
+          dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+      
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: EmployeeApi/bin/Release/net8.0/win-x64/publish/EmployeeApi.exe
+          body: |
+            Release build for Employee API
+            
+            ## Installation
+            1. Download `EmployeeApi.exe`
+            2. Ensure PostgreSQL is running on `localhost:5432`
+            3. Run the `.exe`
+            4. Open `http://localhost:5000`
+            
+            See README.md for setup instructions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
