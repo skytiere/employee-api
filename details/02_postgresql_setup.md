@@ -9,7 +9,7 @@ Download and install from: https://www.postgresql.org/download/
 **Or use Docker:**
 
 ```powershell
-docker run --name etiqa-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+docker run --name employeeapi-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
 ```
 
 ### 2. Create Database
@@ -17,13 +17,13 @@ docker run --name etiqa-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d p
 Open pgAdmin or psql and run:
 
 ```sql
-CREATE DATABASE etiqa_db;
+CREATE DATABASE employeeapi_db;
 ```
 
 **Or via command line:**
 
 ```powershell
-psql -U postgres -c "CREATE DATABASE etiqa_db;"
+psql -U postgres -c "CREATE DATABASE employeeapi_db;"
 ```
 
 ## Setup Steps
@@ -62,7 +62,7 @@ This creates all tables in PostgreSQL.
 **Default (in appsettings.json):**
 
 ```
-Server=localhost;Port=5432;Database=etiqa_db;User Id=postgres;Password=admin;
+Server=localhost;Port=5432;Database=employeeapi_db;User Id=postgres;Password=admin;
 ```
 
 **To change:**
@@ -81,7 +81,7 @@ dotnet run
 ### Check tables in PostgreSQL:
 
 ```sql
-\c etiqa_db
+\c employeeapi_db
 \dt
 ```
 
@@ -118,5 +118,5 @@ dotnet ef database update
 For production, update the connection string in `appsettings.json` or use environment variables:
 
 ```powershell
-$env:ConnectionStrings__DefaultConnection="Server=prod-server;Port=5432;Database=etiqa_db;User Id=appuser;Password=securepass;"
+$env:ConnectionStrings__DefaultConnection="Server=prod-server;Port=5432;Database=employeeapi_db;User Id=appuser;Password=securepass;"
 ```

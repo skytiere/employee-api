@@ -13,7 +13,7 @@ Before setting up the Employee API locally, ensure you have the following instal
 ## Project Structure
 
 ```
-etiqa-application/
+employee-api/
 ├── EmployeeApi/
 │   ├── Controllers/        # API Controllers
 │   ├── Models/             # Data Models
@@ -34,7 +34,7 @@ etiqa-application/
 
 ```bash
 git clone <repository-url>
-cd etiqa-application
+cd employee-api
 ```
 
 ### 2. Navigate to the Employee API Directory

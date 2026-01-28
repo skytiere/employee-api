@@ -30,7 +30,7 @@ Simple API for calculating employee payroll
 ## Project Structure
 
 ```
-etiqa-application/
+employee-api/
 ├── EmployeeApi/
 │   ├── Controllers/        # API Controllers
 │   ├── Models/             # Data Models

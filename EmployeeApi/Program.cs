@@ -16,7 +16,7 @@ builder.Services.AddControllers()
 
 // Configure PostgreSQL connection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Server=localhost;Port=5432;Database=etiqa_db;User Id=postgres;Password=postgres;";
+    ?? "Server=localhost;Port=5432;Database=employeeapi_db;User Id=postgres;Password=postgres;";
 
 builder.Services.AddDbContext<EmployeeContext>(options =>
     options.UseNpgsql(connectionString));
