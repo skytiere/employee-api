@@ -59,5 +59,6 @@ etiqa-application/
 
 In the details folder:
 
-1. **Setup** - Complete local environment setup instructions
-2. **Flow** - Application flow and architecture documentation
+1. **Setup** - Local environment setup instructions
+2. **PostgreSQL Setup** - Database setup instructions
+3. **Flow** - Application flow and architecture documentation
