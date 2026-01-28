@@ -20,6 +20,13 @@ public class EmployeeContext : DbContext
         modelBuilder.Entity<Employee>(entity =>
         {
             entity.HasKey(e => e.Id);
+
+            // Configure DateTime properties for UTC
+            entity.Property(e => e.DateOfBirth).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedAt).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.UpdatedAt).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.StartDate).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.EndDate).HasColumnType("timestamp without time zone");
         });
 
         // Seed sample data
