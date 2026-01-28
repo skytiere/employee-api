@@ -1,6 +1,6 @@
 # Employee Payroll API
 
-Application Assessment for .Net Developer for Etiqa Technical Exam
+Simple API for calculating employee payroll
 
 ## Tech Stack
 
@@ -25,6 +25,7 @@ Application Assessment for .Net Developer for Etiqa Technical Exam
 - **.NET CLI**: Project management and tooling
 - **npm**: Frontend package management
 - **Git**: Version control
+- **VS Code**: IDE
 
 ## Project Structure
 
