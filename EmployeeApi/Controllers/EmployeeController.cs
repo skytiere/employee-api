@@ -67,10 +67,10 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet("page")]
-    public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesPage([FromBody] EmployeePageDto employeePageDto)
+    public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesByPage([FromBody] EmployeePageResponseDto pageResponseDto)
     {
-        var pageNumber = employeePageDto.PageNumber;
-        var pageSize = employeePageDto.PageSize;
+        var pageNumber = pageResponseDto.PageNumber;
+        var pageSize = pageResponseDto.PageSize;
 
         _logger.LogInformation($"Fetching employees page: {pageNumber} with page size: {pageSize}");
 

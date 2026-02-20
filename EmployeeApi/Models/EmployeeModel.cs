@@ -51,14 +51,6 @@ public class UpdateEmployeeDto
     public DateTime? EndDate { get; set; }
 }
 
-public class EmployeePageDto
-{
-    public List<EmployeeDto> Employees { get; set; } = new List<EmployeeDto>();
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
-    public int TotalRecords { get; set; }
-}
-
 public class EmployeePageResponseDto
 {
     public int PageNumber { get; set; }
