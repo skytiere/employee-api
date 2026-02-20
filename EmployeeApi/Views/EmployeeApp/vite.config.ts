@@ -13,18 +13,13 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // "/weatherforecast": {
-      //   target: "https://localhost:7064",
-      //   secure: false,
-      //   changeOrigin: true,
-      // },
       "/api": {
-        target: "https://localhost:7064",
+        target: "http://localhost:5000",
         secure: false,
         changeOrigin: true,
       },
       "/swagger": {
-        target: "https://localhost:7064",
+        target: "http://localhost:5000",
         secure: false,
         changeOrigin: true,
       },
