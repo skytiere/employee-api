@@ -67,8 +67,11 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet("page")]
-    public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesPage([FromQuery] int pageSize, [FromQuery] int pageNumber)
+    public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesPage([FromBody] EmployeePageDto employeePageDto)
     {
+        var pageNumber = employeePageDto.PageNumber;
+        var pageSize = employeePageDto.PageSize;
+
         _logger.LogInformation($"Fetching employees page: {pageNumber} with page size: {pageSize}");
 
         try
