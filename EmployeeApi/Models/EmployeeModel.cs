@@ -50,3 +50,9 @@ public class UpdateEmployeeDto
     public required string WorkingDays { get; set; }
     public DateTime? EndDate { get; set; }
 }
+
+public class EmployeePageResponseDto
+{
+    public int PageNumber { get; set; }
+    public int PageSize { get; set; }
+}

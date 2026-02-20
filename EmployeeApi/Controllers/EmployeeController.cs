@@ -66,6 +66,27 @@ public class EmployeeController : ControllerBase
         }
     }
 
+    [HttpGet("page")]
+    public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesByPage([FromBody] EmployeePageResponseDto pageResponseDto)
+    {
+        var pageNumber = pageResponseDto.PageNumber;
+        var pageSize = pageResponseDto.PageSize;
+
+        _logger.LogInformation($"Fetching employees page: {pageNumber} with page size: {pageSize}");
+
+        try
+        {
+            var result = await _employeeService.GetPage(pageSize, pageNumber);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"An error occurred while fetching employees page: {pageNumber}");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
     [HttpPost]
     public async Task<ActionResult<EmployeeDto>> CreateEmployee([FromBody] CreateEmployeeDto createEmployeeDto)
     {
