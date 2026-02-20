@@ -63,3 +63,11 @@ In the details folder:
 1. **Setup** - Local environment setup instructions
 2. **PostgreSQL Setup** - Database setup instructions
 3. **Flow** - Application flow and architecture documentation
+
+## Installation
+
+1. Download the latest `EmployeeApi.exe` from [Releases](../../releases)
+2. Ensure PostgreSQL is running on `localhost:5432`
+3. Update database name in `appsettings.json` if needed
+4. Run the `.exe`
+5. Open browser to `http://localhost:5000`
