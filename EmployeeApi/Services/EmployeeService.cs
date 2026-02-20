@@ -53,6 +53,16 @@ public class EmployeeService : IEmployeeService
         return MapToDto(employee);
     }
 
+    public async Task<List<EmployeeDto>> GetPage(int pageSize, int pageNumber)
+    {
+        var employees = await _context.Employees
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return employees.Select(e => MapToDto(e)).ToList();
+    }
+
     public async Task<EmployeeDto> Create(CreateEmployeeDto createEmployeeDto)
     {
         var randomNumber = new Random().Next(0, 100000).ToString("D5");
